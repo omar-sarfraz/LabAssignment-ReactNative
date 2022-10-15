@@ -64,6 +64,12 @@ export default function ChatScreen() {
     setKey((prev) => ++prev);
   }
 
+  function scrollToIndexFailed(error) {
+    const offset = error.averageItemLength * error.index;
+    flatListRef.current.scrollToOffset({ offset });
+    //setTimeout(() => this.flatListRef.scrollToIndex({ index: error.index }), 100); // You may choose to skip this line if the above typically works well because your average item height is accurate.
+  }
+
   return (
     <View style={{ backgroundColor: "#1429eb", flex: 1, paddingTop: 10 }}>
       <View
@@ -92,6 +98,7 @@ export default function ChatScreen() {
           extraData={messages}
           initialScrollIndex={key - 1}
           ref={flatListRef}
+          onScrollToIndexFailed={scrollToIndexFailed}
           renderItem={({ item }) => {
             return (
               <View
