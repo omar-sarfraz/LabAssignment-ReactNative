@@ -67,7 +67,6 @@ export default function ChatScreen() {
   function scrollToIndexFailed(error) {
     const offset = error.averageItemLength * error.index;
     flatListRef.current.scrollToOffset({ offset });
-    //setTimeout(() => this.flatListRef.scrollToIndex({ index: error.index }), 100); // You may choose to skip this line if the above typically works well because your average item height is accurate.
   }
 
   return (
