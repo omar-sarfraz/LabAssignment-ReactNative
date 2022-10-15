@@ -10,6 +10,7 @@ import {
   Pressable
 } from "react-native";
 import { Audio } from 'expo-av';
+import Waveform from "./Waveform";
 
 export default function ChatScreen() {
   const flatListRef = useRef(null);
@@ -117,14 +118,16 @@ export default function ChatScreen() {
           renderItem={({ item, index }) => {
             return (
               <View style={{ alignItems: 'flex-end', marginBottom: 5 }}>
-                <View style={{ width: 220, backgroundColor: "#1429eb", borderRadius: 10, alignItems: 'center', padding: 10, flexDirection: 'row' }}>
+                <View style={{ width: 220, backgroundColor: "#1429eb", borderRadius: 10, alignItems: 'center', padding: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
                   <View style={{ alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => playAudio(item, index)}>
                       <Image source={item.play ? require('./assets/pause.png') : require('./assets/play.png')} style={{ width: 35, height: 35, marginBottom: 2 }} />
                     </TouchableOpacity>
                     <Text style={{ color: 'lightgrey', fontWeight: 'bold', fontSize: 12 }}>{item.duration}</Text>
                   </View>
-                  <View></View>
+                  <View>
+                    <Waveform />
+                  </View>
                 </View>
               </View>
             );
