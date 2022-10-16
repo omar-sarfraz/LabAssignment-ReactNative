@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,10 +12,21 @@ import {
 import { Audio } from 'expo-av';
 import Waveform from "./Waveform";
 
-export default function ChatScreen() {
-  const flatListRef = useRef(null);
+export default function VoiceScreen() {
   const [recording, setRecording] = useState();
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    let obj = {
+      sound: '',
+      milliseconds: '',
+      duration: '1:20',
+      file: '',
+      play: false,
+      sent: false
+    }
+    setMessages(prev => [...prev, obj])
+  }, [])
 
   async function startRecording() {
     try {
@@ -49,7 +60,8 @@ export default function ChatScreen() {
       milliseconds: status.durationMillis,
       duration: getDurationFormatted(status.durationMillis),
       file: recording.getURI(),
-      play: false
+      play: false,
+      sent: true
     });
 
     setMessages(newMessages);
@@ -63,14 +75,9 @@ export default function ChatScreen() {
     return `${minutesDisplay}:${secondsDisplay}`;
   }
 
-  function scrollToIndexFailed(error) {
-    const offset = error.averageItemLength * error.index;
-    flatListRef.current.scrollToOffset({ offset });
-  }
-
   function playAudio(item, index) {
     changeArray(item, index);
-    if (!item.play)
+    if (item.play)
       item.sound.replayAsync();
     else {
       item.sound.pauseAsync();
@@ -113,17 +120,15 @@ export default function ChatScreen() {
           style={styles.flatList}
           data={messages}
           extraData={messages}
-          ref={flatListRef}
-          onScrollToIndexFailed={scrollToIndexFailed}
           renderItem={({ item, index }) => {
             return (
-              <View style={{ alignItems: 'flex-end', marginBottom: 5 }}>
-                <View style={{ width: 220, backgroundColor: "#1429eb", borderRadius: 10, alignItems: 'center', padding: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
+              <View style={{ alignItems: item.sent ? 'flex-end' : 'flex-start', marginBottom: 5 }}>
+                <View style={{ width: 220, backgroundColor: item.sent ? "#1429eb" : "#f1f4f2", borderRadius: 10, alignItems: 'center', padding: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
                   <View style={{ alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => playAudio(item, index)}>
                       <Image source={item.play ? require('./assets/pause.png') : require('./assets/play.png')} style={{ width: 35, height: 35, marginBottom: 2 }} />
                     </TouchableOpacity>
-                    <Text style={{ color: 'lightgrey', fontWeight: 'bold', fontSize: 12 }}>{item.duration}</Text>
+                    <Text style={{ color: item.sent ? 'lightgrey' : 'grey', fontWeight: 'bold', fontSize: 12 }}>{item.duration}</Text>
                   </View>
                   <View>
                     <Waveform />

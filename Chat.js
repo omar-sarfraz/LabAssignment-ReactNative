@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   messageView: {
     backgroundColor: "#1429eb",
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 5,
     padding: 5,
     width: "80%",
